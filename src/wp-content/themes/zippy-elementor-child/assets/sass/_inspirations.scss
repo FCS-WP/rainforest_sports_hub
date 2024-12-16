@@ -1,0 +1,67 @@
+#inspirations-blogs{
+    .elementor-posts{
+        padding: 50px 10px 0;
+        @media screen and (max-width: 768px) {
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+        article{
+            padding: 0 10px 30px;
+            .elementor-post__thumbnail__link{
+                margin-bottom: 10px;
+            }
+        }
+        .elementor-post__text{
+            display: flex;
+            .elementor-post__meta-data{
+                order: 1;
+                margin: 0 0 15px 0;
+                color: #8b8989;
+                font-size: 11px;
+                @media screen and (max-width: 768px) {
+                    margin-bottom: 8px;
+                }
+            }
+            .elementor-post__title{
+                order: 2;
+                margin-bottom: 35px;
+                @media screen and (max-width: 768px) {
+                    margin-bottom: 20px;
+                }
+            }
+            .elementor-post__read-more{
+                order: 3
+            }
+        }
+    }
+}
+
+
+#post-content{
+    form{
+        position: relative;
+    }
+    .lakit-search__submit{
+        background: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        .lakit-search__submit-icon{
+            color: gray;
+        }
+    }
+    .jkit-categorylist{
+        padding-left: 20px;
+        .category-list-item{
+            + .category-list-item{
+                margin-top: 5px;
+            }
+        }
+    }
+    .blog-content{
+        .post-date{
+
+        }
+    }
+}

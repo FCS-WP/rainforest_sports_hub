@@ -1,0 +1,132 @@
+#product-list{
+    ul.ul_products{
+        li {
+            .product_item--inner{
+                padding-bottom: 20px;
+                .product_item--thumbnail{
+                    img{
+                        height: 350px;
+                        object-fit: cover;
+                    }
+                }
+                .product_item--title{
+                    font-size: 16px;
+                }
+                .price{
+                    font-size: var(--e-global-typography-text-font-size);
+                }
+                .item--excerpt{
+                    font-size: var(--e-global-typography-text-font-size);
+                }
+            }
+            .la-custom-badge{
+                &.onsale{
+                    display: none;
+                }
+            }
+            .product_item--info{
+                .price del{
+                    display: none;
+                }
+                @media screen and (max-width: 1024px) {
+                    a.button{
+                        padding: 10px 15px;
+                        font-size: var(--e-global-typography-text-font-size);
+                        line-height: 20px;       
+                    }
+                }
+                .product_item--info-action{
+                    a .labtn-text{
+                        font-size: var(--e-global-typography-text-font-size);
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+#section-review .lakit-testimonials__item .lakit-testimonials__content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    position: relative;
+    padding-top: 110px;
+    margin-bottom: 0;
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content:before{
+    content: url("/wp-content/uploads/2024/12/pngwing.com_-e1733898934894.png");
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: grayscale(100%);
+    opacity: 0.8;
+    transform: translateX(-50%) scale(0.7);
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__item-inner{
+    -webkit-box-shadow: 3px 6px 20px -11px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 6px 20px -11px rgba(0,0,0,0.75);
+box-shadow: 3px 6px 20px -11px rgba(0,0,0,0.75);
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__comment{
+    order: 1;
+    text-align: center;
+    font-style: normal;
+    height: 87px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: var(--e-global-typography-text-font-size);
+    margin-bottom: 5px;
+}
+
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__comment:after{
+    display: none;
+}
+
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__figure{
+    order: 2;
+    position: static;
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__figure:before, #section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__figure:after{
+    display: none;
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__figure .lakit-testimonials__tag-img span{
+    background-position: center center;
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__name{
+    order: 3;
+    font-size: 16px;
+    color: var(--theme-secondary-color);
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__position{
+    order: 4;
+    font-size: 10px;
+}
+#section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__rating{
+    display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    #section-review .lakit-testimonials__item .lakit-testimonials__content{
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #section-review .lakit-testimonials__item .lakit-testimonials__content{
+        padding-top: 80px;
+    }
+    #section-review .lakit-testimonials__item .lakit-testimonials__content:before{
+        top: 10px;
+        transform: translateX(-50%) scale(0.5);
+    }
+}
+@media screen and (max-width: 380px) {
+    #section-review .lakit-testimonials__item .lakit-testimonials__content .lakit-testimonials__comment{
+        height: auto;
+    }
+}

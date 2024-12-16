@@ -1,0 +1,52 @@
+#contact-us-form{
+    .e-form__buttons{
+        width: 200px;
+        margin: 0 auto;
+        button{
+            border-radius: 20px;
+        }
+    }
+}
+#contact-us-info{
+    .elementor-widget-icon-box{
+        .elementor-icon-box-wrapper{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            @media screen and (max-width: 380px) {
+                flex-direction: column;
+            }
+            .elementor-icon{
+                width: 40px;
+                height: 40px;
+                border: 1px solid #000;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .elementor-icon-box-content{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                h4{
+                    margin-bottom: 0;
+                }
+            }
+            
+        }
+        + .elementor-widget-icon-box{
+            margin-top: 0;
+        }
+    }
+    
+}
+#contact-us-map {
+    iframe{
+        height: 500px;
+        @media screen and (max-width: 380px) {
+            height: 330px;
+        }
+    }
+}

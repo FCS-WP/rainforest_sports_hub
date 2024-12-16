@@ -1,0 +1,203 @@
+.featherlight {
+  display: none;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  text-align: center;
+  white-space: nowrap;
+  /* styling */
+  cursor: pointer;
+}
+
+/* support for nested featherlights. Does not work in IE8 (use JS to fix) */
+.custom-featherlight-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: .9;
+  z-index: -1;
+  background-color: #333;
+  pointer-events: none;
+}
+
+.featherlight:before {
+  /* position: trick to center content vertically */
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.featherlight .featherlight-content {
+  text-align: left;
+  vertical-align: middle;
+  display: inline-block;
+  background: #fff;
+  white-space: normal;
+  max-width: calc(100vw - 60px);
+  max-height: calc(80vh - 60px);
+  overflow: auto;
+  margin: 30px 0;
+  min-width: 100px;
+}
+
+.featherlight .featherlight-outer {
+  vertical-align: middle;
+  display: inline-block;
+  padding: 0;
+  max-height: 90vh;
+  max-width: 90vw;
+  position: relative;
+  //overflow: hidden;
+}
+
+.featherlight-loading .featherlight-content {
+  background-color: transparent;
+}
+
+.featherlight.featherlight-loading .featherlight-close-icon {
+  display: none;
+}
+
+/* contains the content */
+.featherlight .featherlight-inner {
+  /* make sure its visible */
+  display: block;
+}
+
+/* don't show these though */
+.featherlight script.featherlight-inner,
+.featherlight link.featherlight-inner,
+.featherlight style.featherlight-inner {
+  display: none;
+}
+
+.featherlight .featherlight-close-icon {
+  position: absolute;
+  top: 5px;
+  right: -25px;
+  line-height: 50px;
+  width: 50px;
+  cursor: pointer;
+  text-align: center;
+  color: #fff;
+  border: none;
+  padding: 0;
+  background-color: $secondary-color;
+  border-radius: 50%;
+  transition: all .3s;
+  z-index: 9;
+}
+
+.featherlight .featherlight-close-icon:hover {
+background-color: $primary-color;
+color: #fff;
+@include rotate(90);
+}
+
+.featherlight .featherlight-image {
+/* styling */
+  width: 100%;
+}
+
+
+.featherlight-iframe .featherlight-content {
+  /* removed the border for image croping since iframe is edge to edge */
+  border-bottom: 0;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.featherlight iframe {
+  /* styling */
+  border: none;
+}
+
+.featherlight iframe.featherlight-inner {
+  width: 1170px;
+  height: calc( 1170px * .5625 );
+  @media (max-width: 1200px) {
+    height: calc(100vh * .5625);
+  }
+}
+
+/* hide non featherlight items when printing */
+@media print {
+  html.with-featherlight > * > :not(.featherlight) {
+    display: none;
+  }
+}
+.is--qvpp .featherlight-outer {
+  width: 1500px;
+  max-height: 80vh;
+  .featherlight-content {
+    width: 100%;
+  }
+}
+
+.featherlight-loading .la-loader.spinner3 {
+  margin: 0 auto;
+}
+.open-custom-msg .featherlight-content {
+  width: 600px;
+}
+.la-global-message.featherlight-inner {
+  padding: 30px;
+}
+
+.lakit-ppc.featherlight-inner {
+  position: relative;
+}
+.lakit-ppc--content {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+  color: #fff;
+  padding: 50px 50px;
+}
+.lakit-ppc--content *,
+.lakit-ppc--content .lakit-posts__meta,
+.lakit-ppc--content .lakit-posts__meta * {
+  color: inherit;
+}
+.lakit-ppc--content .lakit-posts__title{
+  font-size: var(--theme-h3-font-size);
+  margin: 0;
+  font-weight: normal;
+}
+.body-pf-gallery .featherlight-content {
+  max-width: none;
+  max-height: none;
+}
+html.with-featherlight {
+  overflow: hidden;
+}
+
+@media(max-width: 880px){
+  .lakit-ppc--content {
+    padding: 20px;
+  }
+  .lakit-ppc.featherlight-inner {
+    width: 100% !important;
+  }
+  .body-pf-gallery .featherlight-content {
+    margin: 0;
+  }
+  .featherlight .featherlight-close-icon {
+    left: calc(50% - 25px);
+    right: auto;
+    top: auto;
+    bottom: -50px;
+    width: 40px;
+    height: 40px;
+    line-height: 38px;
+    font-size: 14px;
+  }
+}
