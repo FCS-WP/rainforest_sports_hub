@@ -1,16 +1,14 @@
 <?php
+/**
+ * The template for displaying sidebar.
+ *
+ * @package HelloElementor
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
-$sidebar = apply_filters('bakerfresh/filter/sidebar_primary_name', 'sidebar');
-
-if(is_active_sidebar($sidebar)):
-?>
-    <aside class="sidebar-container widget-area">
-        <div class="sidebar-inner">
-            <?php dynamic_sidebar($sidebar); ?>
-        </div>
-    </aside>
-    <?php
-endif;
+/**
+ * This file is here to avoid the Deprecated Message for sidebar by wp-includes/theme-compat/sidebar.php.
+ */
