@@ -1,0 +1,36 @@
+.box-product-featured {
+    .woocommerce-product-gallery__image {
+        img {
+            width: 100%;
+            height: 500px !important;
+            object-fit: cover;
+            object-position: center center;
+        }
+    }
+    .flex-control-nav.flex-control-thumbs {
+        display: flex;
+    }
+}
+.woocommerce-ordering {
+    position: relative;
+    margin-bottom: 40px !important;
+    .orderby {
+        background-color: white;
+        border: none;
+        padding: 10px 20px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;        padding: 10px 30px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    &::after {
+        content: '\25BC';
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-48%);
+        pointer-events: none; /* Không làm ảnh hưởng đến thao tác người dùng */
+        color: #333;
+        font-size: 14px;
+    }
+}
