@@ -1,0 +1,33 @@
+#header{
+    #header-top{
+        .lakit-search{
+            position: relative;
+            form.lakit-search__form{
+                .lakit-search__submit{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                }
+            }
+        }
+        
+    }
+    .lakit-nav__mobile-trigger{
+        padding-top: 10px;
+    }
+}
+
+.show_more{
+    font-size: 13px;
+    color: var(--enav_n_tcolor);
+    display: flex;
+    align-items: center;
+    text-align: right;
+    i{
+        // font-size: 13px;
+        color: var(--enav_n_tcolor);
+        font-weight: bold;
+        padding-top: 2px;
+    }
+}

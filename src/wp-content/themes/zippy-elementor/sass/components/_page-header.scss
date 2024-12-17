@@ -1,0 +1,57 @@
+.page-header--default{
+  text-align: center;
+  display: var(--page-title-display);
+  .page-header-inner {
+    padding-top: 65px;
+    padding-bottom: 65px;
+  }
+  .entry-title{
+    margin: 0;
+  }
+}
+/**
+ * Breadcrumbs
+ */
+.site-breadcrumbs {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  p{
+    margin: 0;
+  }
+
+  .breadcrumb-sep {
+    margin: 0 .5em;
+    font-size: .875em;
+  }
+
+  .icon-home.has-text,
+  .breadcrumb-home.has-icon {
+    display: none;
+  }
+
+  .breadcrumb-title {
+    margin-right: 5px;
+  }
+  .icon-home{
+    margin-top: -.3em;
+  }
+}
+
+@media(max-width: 1200px){
+  li.trail-item.trail-end span {
+    display: block;
+    max-width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: middle;
+  }
+}

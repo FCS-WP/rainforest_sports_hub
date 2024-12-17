@@ -1,0 +1,48 @@
+#ft-subscription-form {
+    position: relative;
+    .e-form__buttons, .elementor-field-type-email {
+        margin: 0;
+        padding: 0;
+    }
+    .elementor-field-type-email input{
+        padding-right: 100px;
+        border: none;
+        outline: none;
+        &:focus{
+            box-shadow: none;
+            border: none;
+        }
+    }
+    .e-form__buttons{
+        position: absolute;
+        top: 0;
+        right: -5px;
+        bottom: 0;
+        display: inline-block;
+        width: auto;
+        height: 46px;
+        button{
+            height: inherit;
+            background: #000;
+        }
+    }
+}
+
+#ft-store-info{
+    .info-box{
+        .elementor-icon-box-wrapper{
+            align-items: center;
+            h6.elementor-icon-box-title{
+                margin: 0;
+                font-size: 15px;
+            }
+        }
+    }
+}
+
+#ft-whatapps{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 111;
+}

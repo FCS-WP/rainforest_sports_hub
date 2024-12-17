@@ -1,0 +1,9 @@
+/**
+ * Single Post
+ */
+.page-content {
+	margin-bottom: 3em;
+	.elementor-page &{
+		margin-bottom: 0;
+	}
+}

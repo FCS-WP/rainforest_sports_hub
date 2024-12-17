@@ -1,0 +1,58 @@
+#popular-post{
+    .elementor-posts{
+        gap: 15px;
+        padding-left: 20px;
+        article{
+            display: flex;
+            flex-direction: row;
+            .elementor-post__thumbnail__link{
+                width: 100px;
+                margin-bottom: 0;
+            }
+            .elementor-post__text{
+                width: calc(100% - 150px);
+                padding-left: 15px;
+                display: flex;
+                h4{
+                    order: 2;
+                }
+                .elementor-post__meta-data{
+                    order: 1;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
+}
+#product-sidebar{
+    .lakit-search{
+        form{
+            position: relative;
+            button.lakit-search__submit{
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+            }
+            input{
+                // padding-right: 70px;
+            }
+        }
+            
+    }
+}
+.la-custom-badge{
+    &.onsale{
+        display: none;
+    }
+}
+#shop{
+    .wc-toolbar-container{
+        position: static !important;
+    }
+    .lakit-products__list{
+        h3.product_item--title, .price{
+            font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+        }
+    }
+}
