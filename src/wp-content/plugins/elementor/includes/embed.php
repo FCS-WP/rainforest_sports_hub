@@ -179,6 +179,7 @@ class Embed {
 		$default_frame_attributes = [
 			'class' => 'elementor-video-iframe',
 			'allowfullscreen',
+			'allow' => 'clipboard-write',
 			'title' => sprintf(
 				/* translators: %s: Video provider */
 				__( '%s Video Player', 'elementor' ),
@@ -194,6 +195,10 @@ class Embed {
 			$default_frame_attributes['src'] = $video_embed_url;
 		} else {
 			$default_frame_attributes['data-lazy-load'] = $video_embed_url;
+		}
+
+		if ( isset( $embed_url_params['autoplay'] ) ) {
+			$default_frame_attributes['allow'] = 'autoplay';
 		}
 
 		$frame_attributes = array_merge( $default_frame_attributes, $frame_attributes );

@@ -51,6 +51,10 @@ class Gallery extends Base_Widget {
 		return 'eicon-gallery-justified';
 	}
 
+	protected function is_dynamic_content(): bool {
+		return false;
+	}
+
 	public function get_inline_css_depends() {
 		if ( 'multiple' === $this->get_settings_for_display( 'gallery_type' ) ) {
 			return [ 'nav-menu' ];
@@ -279,6 +283,29 @@ class Gallery extends Base_Widget {
 		);
 
 		$this->add_control(
+			'open_lightbox',
+			[
+				'label' => esc_html__( 'Lightbox', 'elementor-pro' ),
+				'type' => Controls_Manager::SELECT,
+				'description' => sprintf(
+					/* translators: 1: Link open tag, 2: Link close tag. */
+					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'elementor-pro' ),
+					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-lightbox\' ) )">',
+					'</a>'
+				),
+				'default' => 'default',
+				'options' => [
+					'default' => esc_html__( 'Default', 'elementor-pro' ),
+					'yes' => esc_html__( 'Yes', 'elementor-pro' ),
+					'no' => esc_html__( 'No', 'elementor-pro' ),
+				],
+				'condition' => [
+					'link_to' => 'file',
+				],
+			]
+		);
+
+		$this->add_control(
 			'aspect_ratio',
 			[
 				'type' => Controls_Manager::SELECT,
@@ -341,6 +368,9 @@ class Gallery extends Base_Widget {
 				],
 				'dynamic' => [
 					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
 				],
 			]
 		);
@@ -542,6 +572,9 @@ class Gallery extends Base_Widget {
 					'em' => [
 						'max' => 2,
 					],
+					'em' => [
+						'max' => 2,
+					],
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--image-border-width: {{SIZE}}{{UNIT}};',
@@ -646,6 +679,7 @@ class Gallery extends Base_Widget {
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
 				],
 				'selectors' => [
@@ -807,6 +841,7 @@ class Gallery extends Base_Widget {
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
 				],
 				'selectors' => [
@@ -1059,6 +1094,7 @@ class Gallery extends Base_Widget {
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
 				],
 				'selectors' => [
@@ -1518,10 +1554,14 @@ class Gallery extends Base_Widget {
 						$href = $image_data['media'];
 
 						$this->add_render_attribute( 'gallery_item_' . $unique_index, [
-							'href' => $href,
+							'href' => esc_url( $href ),
 						] );
 
-						$this->add_lightbox_data_attributes( 'gallery_item_' . $unique_index, $id, 'yes', 'all-' . $this->get_id() );
+						if ( Plugin::elementor()->editor->is_edit_mode() ) {
+							$this->add_render_attribute( 'gallery_item_' . $unique_index, 'class', 'elementor-clickable' );
+						}
+
+						$this->add_lightbox_data_attributes( 'gallery_item_' . $unique_index, $id, $settings['open_lightbox'], $this->get_id() );
 					} elseif ( 'custom' === $settings['link_to'] ) {
 						$this->add_link_attributes( 'gallery_item_' . $unique_index, $settings['url'] );
 					}
