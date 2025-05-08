@@ -1,4 +1,4 @@
-/*! elementor - v3.18.0 - 08-12-2023 */
+/*! elementor - v3.23.0 - 15-07-2024 */
 "use strict";
 (self["webpackChunkelementor"] = self["webpackChunkelementor"] || []).push([["frontend"],{
 
@@ -103,6 +103,9 @@ module.exports = function ($) {
   }
   if (elementorFrontendConfig.experimentalFeatures['nested-elements']) {
     this.elementsHandlers['nested-accordion.default'] = () => Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! elementor/modules/nested-accordion/assets/js/frontend/handlers/nested-accordion */ "../modules/nested-accordion/assets/js/frontend/handlers/nested-accordion.js"));
+  }
+  if (elementorFrontendConfig.experimentalFeatures['floating-buttons']) {
+    this.elementsHandlers['contact-buttons.default'] = () => Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! elementor/modules/floating-buttons/assets/js/frontend/handlers/contact-buttons */ "../modules/floating-buttons/assets/js/frontend/handlers/contact-buttons.js"));
   }
   const addGlobalHandlers = () => elementorFrontend.hooks.addAction('frontend/element_ready/global', _global.default);
   const addElementsHandlers = () => {
@@ -212,7 +215,8 @@ module.exports = function ($) {
     return this.elementsHandlers;
   };
   this.runReadyTrigger = function (scope) {
-    if (elementorFrontend.config.is_static) {
+    const isDelayChildHandlers = !!scope.closest('[data-delay-child-handlers="true"]') && 0 !== scope.closest('[data-delay-child-handlers="true"]').length;
+    if (elementorFrontend.config.is_static || isDelayChildHandlers) {
       return;
     }
 
@@ -277,13 +281,13 @@ class Frontend extends elementorModules.ViewModule {
     this.config = elementorFrontendConfig;
     this.config.legacyMode = {
       /**
-       * @deprecated since 3.1.0, use `elementorFrontend.config.experimentalFeatures.e_dom_optimization` instead.
+       * @deprecated since 3.1.0
        */
       get elementWrappers() {
         if (elementorFrontend.isEditMode()) {
-          window.top.elementorDevTools.deprecation.deprecated('elementorFrontend.config.legacyMode.elementWrappers', '3.1.0', 'elementorFrontend.config.experimentalFeatures.e_dom_optimization');
+          window.top.elementorDevTools.deprecation.deprecated('elementorFrontend.config.legacyMode.elementWrappers', '3.1.0');
         }
-        return !elementorFrontend.config.experimentalFeatures.e_dom_optimization;
+        return false;
       }
     };
     this.populateActiveBreakpointsConfig();
@@ -1632,18 +1636,15 @@ class LightboxManager extends elementorModules.ViewModule {
     if (isColorPickingMode) {
       return;
     }
-    const lightbox = this.isOptimizedAssetsLoading() ? await LightboxManager.getLightbox() : elementorFrontend.utils.lightbox;
+    const lightbox = await LightboxManager.getLightbox();
     lightbox.createLightbox(element);
-  }
-  isOptimizedAssetsLoading() {
-    return elementorFrontend.config.experimentalFeatures.e_optimized_assets_loading;
   }
   bindEvents() {
     elementorFrontend.elements.$document.on('click', this.getSettings('selectors.links'), event => this.onLinkClick(event));
   }
   onInit() {
     super.onInit(...arguments);
-    if (!this.isOptimizedAssetsLoading() || elementorFrontend.isEditMode()) {
+    if (elementorFrontend.isEditMode()) {
       return;
     }
 
@@ -1689,9 +1690,6 @@ class Swiper {
     container.closest('.elementor-widget-wrap')?.classList.add('e-swiper-container');
     container.closest('.elementor-widget')?.classList.add('e-widget-swiper');
     return new Promise(resolve => {
-      if (!elementorFrontend.config.experimentalFeatures.e_optimized_assets_loading) {
-        return resolve(this.createSwiperInstance(container, this.config));
-      }
       elementorFrontend.utils.assetsLoader.load('script', 'swiper').then(() => resolve(this.createSwiperInstance(container, this.config)));
     });
   }
@@ -1808,6 +1806,7 @@ class _default extends elementorModules.ViewModule {
     if (settingsMatch) {
       settings = JSON.parse(atob(settingsMatch[1]));
     }
+    settings.previousEvent = event;
     for (var _len = arguments.length, restArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       restArgs[_key - 1] = arguments[_key];
     }
@@ -1961,8 +1960,6 @@ class VimeoLoader extends _baseLoader.default {
     return Vimeo;
   }
   getAutoplayURL(videoURL) {
-    videoURL = super.getAutoplayURL(videoURL);
-
     // Vimeo requires the '#t=' param to be last in the URL.
     const timeMatch = videoURL.match(/#t=[^&]*/);
     return videoURL.replace(timeMatch[0], '') + timeMatch;

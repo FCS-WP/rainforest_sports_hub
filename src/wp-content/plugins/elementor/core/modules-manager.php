@@ -87,6 +87,7 @@ class Modules_Manager {
 			'wp-cli',
 			'safe-mode',
 			'ai',
+			'notifications',
 			'usage',
 			'dev-tools',
 			'landing-pages',
@@ -112,7 +113,13 @@ class Modules_Manager {
 			'announcements',
 			'site-navigation',
 			'styleguide',
+			'element-cache',
 			'apps',
+			'home',
+			'link-in-bio',
+			'floating-buttons',
+			'content-sanitizer',
+			'editor-events',
 		];
 	}
 

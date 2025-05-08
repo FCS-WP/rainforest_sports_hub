@@ -1,4 +1,4 @@
-/*! elementor - v3.18.0 - 08-12-2023 */
+/*! elementor - v3.23.0 - 15-07-2024 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -272,18 +272,37 @@ var FilesUploadHandler = /*#__PURE__*/function () {
       frame.uploader.uploader.param('uploadTypeCaller', 'elementor-wp-media-upload');
     }
   }, {
+    key: "getUnfilteredFilesNonAdminDialog",
+    value: function getUnfilteredFilesNonAdminDialog() {
+      return elementorCommon.dialogsManager.createWidget('alert', {
+        id: 'e-unfiltered-files-disabled-dialog',
+        headerMessage: __('Sorry, you can\'t upload that file yet', 'elementor'),
+        message: __('This is because JSON files may pose a security risk.', 'elementor') + '<br><br>' + __('To upload them anyway, ask the site administrator to enable unfiltered file uploads.', 'elementor'),
+        strings: {
+          confirm: __('Got it', 'elementor')
+        }
+      });
+    }
+  }, {
     key: "getUnfilteredFilesNotEnabledDialog",
     value: function getUnfilteredFilesNotEnabledDialog(callback) {
+      var elementorInstance = window.elementorAdmin || window.elementor;
+      if (!elementorInstance.config.user.is_administrator) {
+        return this.getUnfilteredFilesNonAdminDialog();
+      }
       var onConfirm = function onConfirm() {
         elementorCommon.ajax.addRequest('enable_unfiltered_files_upload', {}, true);
         elementorCommon.config.filesUpload.unfilteredFiles = true;
         callback();
       };
-      return elementor.helpers.getSimpleDialog('e-enable-unfiltered-files-dialog', __('Enable Unfiltered File Uploads', 'elementor'), __('Before you enable unfiltered files upload, note that such files include a security risk. Elementor does run a process to remove possible malicious code, but there is still risk involved when using such files.', 'elementor'), __('Enable', 'elementor'), onConfirm);
+      return elementorInstance.helpers.getSimpleDialog('e-enable-unfiltered-files-dialog', __('Enable Unfiltered File Uploads', 'elementor'), __('Before you enable unfiltered files upload, note that such files include a security risk. Elementor does run a process to remove possible malicious code, but there is still risk involved when using such files.', 'elementor'), __('Enable', 'elementor'), onConfirm);
     }
   }, {
     key: "getUnfilteredFilesNotEnabledImportTemplateDialog",
     value: function getUnfilteredFilesNotEnabledImportTemplateDialog(callback) {
+      if (!(window.elementorAdmin || window.elementor).config.user.is_administrator) {
+        return this.getUnfilteredFilesNonAdminDialog();
+      }
       return elementorCommon.dialogsManager.createWidget('confirm', {
         id: 'e-enable-unfiltered-files-dialog-import-template',
         headerMessage: __('Enable Unfiltered File Uploads', 'elementor'),
@@ -587,7 +606,6 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
-var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "../node_modules/@babel/runtime/helpers/toConsumableArray.js"));
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "../node_modules/@babel/runtime/helpers/slicedToArray.js"));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
@@ -756,22 +774,19 @@ var ExperimentsMessages = /*#__PURE__*/function () {
       }).show();
     }
   }, {
-    key: "joinDependenciesNames",
-    value: function joinDependenciesNames(array) {
-      var glue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-      var finalGlue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-      if ('' === finalGlue) {
-        return array.join(glue);
-      }
-      if (!array.length) {
-        return '';
-      }
-      if (1 === array.length) {
-        return array[0];
-      }
-      var clone = (0, _toConsumableArray2.default)(array),
-        lastItem = clone.pop();
-      return clone.join(glue) + finalGlue + lastItem;
+    key: "getSiteLanguageCode",
+    value: function getSiteLanguageCode() {
+      var languageCode = document.querySelector('html').getAttribute('lang');
+      return languageCode !== null && languageCode !== void 0 ? languageCode : 'en'; // Fallback to English if no language code found.
+    }
+  }, {
+    key: "formatDependenciesList",
+    value: function formatDependenciesList(dependencies) {
+      var dependenciesTitles = dependencies.map(function (d) {
+        return d.title;
+      });
+      var languageCode = this.getSiteLanguageCode();
+      return new Intl.ListFormat(languageCode).format(dependenciesTitles);
     }
   }, {
     key: "showDependenciesDialog",
@@ -779,12 +794,10 @@ var ExperimentsMessages = /*#__PURE__*/function () {
       var _this5 = this;
       var experiment = this.getExperimentData(experimentId),
         experimentName = experiment.title,
-        dialogMessage = this.joinDependenciesNames(this.getExperimentDependencies(experimentId).map(function (d) {
-          return d.title;
-        }));
+        dependenciesList = this.formatDependenciesList(this.getExperimentDependencies(experimentId));
 
       // Translators: %1$s: Experiment title, %2$s: Comma-separated dependencies list
-      var message = __('In order to use %1$s, first you need to activate %2$s.', 'elementor').replace('%1$s', "<strong>".concat(experimentName, "</strong>")).replace('%2$s', dialogMessage);
+      var message = __('In order to use %1$s, first you need to activate %2$s.', 'elementor').replace('%1$s', "<strong>".concat(experimentName, "</strong>")).replace('%2$s', dependenciesList);
       this.showDialog({
         message: message,
         headerMessage: __('First, activate another experiment.', 'elementor'),
@@ -945,6 +958,148 @@ var ExperimentsModule = /*#__PURE__*/function (_elementorModules$Vie) {
   return ExperimentsModule;
 }(elementorModules.ViewModule);
 exports["default"] = ExperimentsModule;
+
+/***/ }),
+
+/***/ "../modules/floating-buttons/assets/js/admin/floating-buttons.js":
+/*!***********************************************************************!*\
+  !*** ../modules/floating-buttons/assets/js/admin/floating-buttons.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _get2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/get */ "../node_modules/@babel/runtime/helpers/get.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+var _menuHandler = _interopRequireDefault(__webpack_require__(/*! elementor-admin/menu-handler */ "../assets/dev/js/admin/menu-handler.js"));
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var FloatingButtonsHandler = /*#__PURE__*/function (_AdminMenuHandler) {
+  (0, _inherits2.default)(FloatingButtonsHandler, _AdminMenuHandler);
+  var _super = _createSuper(FloatingButtonsHandler);
+  function FloatingButtonsHandler() {
+    (0, _classCallCheck2.default)(this, FloatingButtonsHandler);
+    return _super.apply(this, arguments);
+  }
+  (0, _createClass2.default)(FloatingButtonsHandler, [{
+    key: "getDefaultSettings",
+    value: function getDefaultSettings() {
+      var pageName = 'e-floating-buttons',
+        adminMenuSelectors = {
+          // The escaping is done because jQuery requires it for selectors.
+          contactPagesTablePage: 'a[href="edit.php?post_type=' + pageName + '"]',
+          contactPagesAddNewPage: 'a[href="edit.php?post_type=elementor_library&page=' + pageName + '"]'
+        };
+      return {
+        selectors: {
+          addButton: '.page-title-action:first',
+          templatesMenuItem: '.menu-icon-elementor_library',
+          contactPagesMenuItem: "".concat(adminMenuSelectors.contactPagesTablePage, ", ").concat(adminMenuSelectors.contactPagesAddNewPage)
+        }
+      };
+    }
+  }, {
+    key: "getDefaultElements",
+    value: function getDefaultElements() {
+      var selectors = this.getSettings('selectors'),
+        elements = (0, _get2.default)((0, _getPrototypeOf2.default)(FloatingButtonsHandler.prototype), "getDefaultElements", this).call(this);
+      elements.$templatesMenuItem = jQuery(selectors.templatesMenuItem);
+      elements.$contactPagesMenuItem = jQuery(selectors.contactPagesMenuItem);
+      return elements;
+    }
+  }, {
+    key: "onInit",
+    value: function onInit() {
+      var _elementorAdminConfig;
+      (0, _get2.default)((0, _getPrototypeOf2.default)(FloatingButtonsHandler.prototype), "onInit", this).call(this);
+      var settings = this.getSettings(),
+        isContactPagesTablePage = !!window.location.href.includes(settings.paths.contactPagesTablePage),
+        isContactPagesTrashPage = !!window.location.href.includes(settings.paths.contactPagesTrashPage),
+        isLContactPagesCreateYourFirstPage = !!window.location.href.includes(settings.paths.contactPagesAddNewPage);
+
+      // We need this because there is a complex bug in the WordPress admin menu that causes the Contact Menu to be broken
+      // When the links page has at least one post and the contact page has none.
+      if ((_elementorAdminConfig = elementorAdminConfig.urls) !== null && _elementorAdminConfig !== void 0 && _elementorAdminConfig.viewContactPageUrl) {
+        this.elements.$templatesMenuItem.find('li.submenu-e-contact a').attr('href', elementorAdminConfig.urls.viewContactPageUrl);
+      }
+      if (isContactPagesTablePage || isContactPagesTrashPage || isLContactPagesCreateYourFirstPage) {
+        this.highlightTopLevelMenuItem(this.elements.$templatesMenuItem, this.elements.$pagesMenuItemAndLink);
+        this.highlightSubMenuItem(this.elements.$contactPagesMenuItem);
+        jQuery(settings.selectors.addButton).attr('href', elementorAdminConfig.urls.addNewLinkUrlContact);
+      }
+    }
+  }]);
+  return FloatingButtonsHandler;
+}(_menuHandler.default);
+exports["default"] = FloatingButtonsHandler;
+
+/***/ }),
+
+/***/ "../modules/floating-buttons/assets/js/admin/module.js":
+/*!*************************************************************!*\
+  !*** ../modules/floating-buttons/assets/js/admin/module.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "../node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../node_modules/@babel/runtime/helpers/classCallCheck.js"));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "../node_modules/@babel/runtime/helpers/createClass.js"));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "../node_modules/@babel/runtime/helpers/inherits.js"));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+var _floatingButtons = _interopRequireDefault(__webpack_require__(/*! ./floating-buttons */ "../modules/floating-buttons/assets/js/admin/floating-buttons.js"));
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2.default)(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2.default)(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2.default)(this, result); }; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+var _default = /*#__PURE__*/function (_elementorModules$Mod) {
+  (0, _inherits2.default)(_default, _elementorModules$Mod);
+  var _super = _createSuper(_default);
+  function _default() {
+    var _this;
+    (0, _classCallCheck2.default)(this, _default);
+    _this = _super.call(this);
+    elementorCommon.elements.$window.on('elementor/admin/init', function () {
+      _this.runHandler();
+    });
+    return _this;
+  }
+  (0, _createClass2.default)(_default, [{
+    key: "runHandler",
+    value: function runHandler() {
+      var pageNameContact = 'e-floating-buttons',
+        paths = {
+          contactPagesTablePage: 'edit.php?post_type=' + pageNameContact,
+          contactPagesAddNewPage: 'edit.php?post_type=elementor_library&page=' + pageNameContact,
+          contactPagesTrashPage: 'edit.php?post_status=trash&post_type=' + pageNameContact
+        },
+        args = {
+          paths: paths
+        };
+
+      // This class modifies elements in the WordPress admin that are rendered "wrong" by the WordPress core
+      // and could not be modified in the backend.
+      new _floatingButtons.default(args);
+    }
+  }]);
+  return _default;
+}(elementorModules.Module);
+exports["default"] = _default;
 
 /***/ }),
 
@@ -1130,20 +1285,6 @@ function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
 }
 module.exports = _arrayWithHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ "../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":
-/*!*******************************************************************!*\
-  !*** ../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
-  \*******************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray.js */ "../node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return arrayLikeToArray(arr);
-}
-module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -1356,19 +1497,6 @@ module.exports = _interopRequireDefault, module.exports.__esModule = true, modul
 
 /***/ }),
 
-/***/ "../node_modules/@babel/runtime/helpers/iterableToArray.js":
-/*!*****************************************************************!*\
-  !*** ../node_modules/@babel/runtime/helpers/iterableToArray.js ***!
-  \*****************************************************************/
-/***/ ((module) => {
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
 /***/ "../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
 /*!**********************************************************************!*\
   !*** ../node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
@@ -1416,19 +1544,6 @@ function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 module.exports = _nonIterableRest, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ "../node_modules/@babel/runtime/helpers/nonIterableSpread.js":
-/*!*******************************************************************!*\
-  !*** ../node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
-  \*******************************************************************/
-/***/ ((module) => {
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -1817,23 +1932,6 @@ module.exports = _superPropBase, module.exports.__esModule = true, module.export
 
 /***/ }),
 
-/***/ "../node_modules/@babel/runtime/helpers/toConsumableArray.js":
-/*!*******************************************************************!*\
-  !*** ../node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
-  \*******************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var arrayWithoutHoles = __webpack_require__(/*! ./arrayWithoutHoles.js */ "../node_modules/@babel/runtime/helpers/arrayWithoutHoles.js");
-var iterableToArray = __webpack_require__(/*! ./iterableToArray.js */ "../node_modules/@babel/runtime/helpers/iterableToArray.js");
-var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "../node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
-var nonIterableSpread = __webpack_require__(/*! ./nonIterableSpread.js */ "../node_modules/@babel/runtime/helpers/nonIterableSpread.js");
-function _toConsumableArray(arr) {
-  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
-}
-module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
 /***/ "../node_modules/@babel/runtime/helpers/toPrimitive.js":
 /*!*************************************************************!*\
   !*** ../node_modules/@babel/runtime/helpers/toPrimitive.js ***!
@@ -1841,17 +1939,17 @@ module.exports = _toConsumableArray, module.exports.__esModule = true, module.ex
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var _typeof = (__webpack_require__(/*! ./typeof.js */ "../node_modules/@babel/runtime/helpers/typeof.js")["default"]);
-function _toPrimitive(input, hint) {
-  if (_typeof(input) !== "object" || input === null) return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== undefined) {
-    var res = prim.call(input, hint || "default");
-    if (_typeof(res) !== "object") return res;
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
     throw new TypeError("@@toPrimitive must return a primitive value.");
   }
-  return (hint === "string" ? String : Number)(input);
+  return ("string" === r ? String : Number)(t);
 }
-module.exports = _toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
+module.exports = toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -1863,11 +1961,11 @@ module.exports = _toPrimitive, module.exports.__esModule = true, module.exports[
 
 var _typeof = (__webpack_require__(/*! ./typeof.js */ "../node_modules/@babel/runtime/helpers/typeof.js")["default"]);
 var toPrimitive = __webpack_require__(/*! ./toPrimitive.js */ "../node_modules/@babel/runtime/helpers/toPrimitive.js");
-function _toPropertyKey(arg) {
-  var key = toPrimitive(arg, "string");
-  return _typeof(key) === "symbol" ? key : String(key);
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : String(i);
 }
-module.exports = _toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
+module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -1982,6 +2080,7 @@ var _events = _interopRequireDefault(__webpack_require__(/*! elementor-utils/eve
 var _filesUploadHandler = _interopRequireDefault(__webpack_require__(/*! ../editor/utils/files-upload-handler */ "../assets/dev/js/editor/utils/files-upload-handler.js"));
 var _templateControls = _interopRequireDefault(__webpack_require__(/*! ./new-template/template-controls.js */ "../assets/dev/js/admin/new-template/template-controls.js"));
 var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upload-warning-message */ "../assets/dev/js/utils/json-upload-warning-message.js");
+var _module3 = _interopRequireDefault(__webpack_require__(/*! elementor/modules/floating-buttons/assets/js/admin/module */ "../modules/floating-buttons/assets/js/admin/module.js"));
 (function ($) {
   var ElementorAdmin = elementorModules.ViewModule.extend({
     maintenanceMode: null,
@@ -2225,11 +2324,6 @@ var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upl
           }
         }).show();
       });
-      $('.elementor_css_print_method select').on('change', function () {
-        var $descriptions = $('.elementor-css-print-method-description');
-        $descriptions.hide();
-        $descriptions.filter('[data-value="' + $(this).val() + '"]').show();
-      }).trigger('change');
       $('.elementor_google_font select').on('change', function () {
         $('.elementor_font_display').toggle('1' === $(this).val());
       }).trigger('change');
@@ -2244,6 +2338,9 @@ var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upl
       this.roleManager.init();
       if (elementorCommon.config.experimentalFeatures['landing-pages']) {
         new _module.default();
+      }
+      if (elementorCommon.config.experimentalFeatures['floating-buttons']) {
+        new _module3.default();
       }
       this.templateControls = new _templateControls.default();
       new _module2.default();
@@ -2278,7 +2375,9 @@ var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upl
       });
     },
     initTemplatesImport: function initTemplatesImport() {
-      if (!elementorCommon.elements.$body.hasClass('post-type-elementor_library')) {
+      var _elementorAdminConfig, _elementorAdminConfig2;
+      var canImport = elementorAdminConfig.user.is_administrator || ((_elementorAdminConfig = (_elementorAdminConfig2 = elementorAdminConfig.user.restrictions) === null || _elementorAdminConfig2 === void 0 ? void 0 : _elementorAdminConfig2.includes('json-upload')) !== null && _elementorAdminConfig !== void 0 ? _elementorAdminConfig : false);
+      if (!canImport || !elementorCommon.elements.$body.hasClass('post-type-elementor_library')) {
         return;
       }
       var self = this,
@@ -2293,17 +2392,24 @@ var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upl
       $importButton.on('click', function () {
         $('#elementor-import-template-area').toggle();
       });
-      var messageShown = false;
+      var messages = {
+        jsonUploadWarning: {
+          shown: false
+        },
+        enableUnfilteredFiles: {
+          shown: false
+        }
+      };
       var originalButtonValue = $importNowButton[0].value;
       $importForm.on('submit', /*#__PURE__*/function () {
         var _ref4 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(event) {
-          var enableUnfilteredFilesModal;
+          var hasImportedFiles, areUnfilteredFilesEnabled, enableUnfilteredFilesModal;
           return _regenerator.default.wrap(function _callee$(_context) {
             while (1) switch (_context.prev = _context.next) {
               case 0:
                 $importNowButton[0].disabled = true;
                 $importNowButton[0].value = __('Importing...', 'elementor');
-                if (messageShown) {
+                if (messages.jsonUploadWarning.shown) {
                   _context.next = 16;
                   break;
                 }
@@ -2316,7 +2422,7 @@ var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upl
                   waitForSetViewed: true
                 });
               case 7:
-                messageShown = true;
+                messages.jsonUploadWarning.shown = true;
                 $importForm.trigger('submit');
                 _context.next = 15;
                 break;
@@ -2328,19 +2434,23 @@ var _jsonUploadWarningMessage = __webpack_require__(/*! elementor-utils/json-upl
               case 15:
                 return _context.abrupt("return");
               case 16:
-                if (!($importFormFileInput[0].files.length && !elementorCommon.config.filesUpload.unfilteredFiles)) {
-                  _context.next = 21;
+                hasImportedFiles = $importFormFileInput[0].files.length;
+                areUnfilteredFilesEnabled = elementorCommon.config.filesUpload.unfilteredFiles;
+                if (!(hasImportedFiles && !areUnfilteredFilesEnabled && !messages.enableUnfilteredFiles.shown)) {
+                  _context.next = 23;
                   break;
                 }
                 event.preventDefault();
                 enableUnfilteredFilesModal = _filesUploadHandler.default.getUnfilteredFilesNotEnabledImportTemplateDialog(function () {
+                  messages.enableUnfilteredFiles.shown = true;
                   $importForm.trigger('submit');
                 });
                 enableUnfilteredFilesModal.show();
                 return _context.abrupt("return");
-              case 21:
-                messageShown = false;
-              case 22:
+              case 23:
+                messages.jsonUploadWarning.shown = false;
+                messages.enableUnfilteredFiles.shown = false;
+              case 25:
               case "end":
                 return _context.stop();
             }

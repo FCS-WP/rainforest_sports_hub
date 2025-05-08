@@ -35,6 +35,8 @@ class My_Account extends Base_Widget {
 	}
 
 	protected function register_controls() {
+		$start = is_rtl() ? 'end' : 'start';
+		$end = is_rtl() ? 'start' : 'end';
 
 		$this->start_controls_section(
 			'section_menu_icon_content',
@@ -78,19 +80,19 @@ class My_Account extends Base_Widget {
 				'options' => [
 					'start' => [
 						'title' => esc_html__( 'Start', 'elementor-pro' ),
-						'icon' => 'eicon-h-align-left',
+						'icon' => "eicon-align-$start-h",
 					],
 					'center' => [
 						'title' => esc_html__( 'Center', 'elementor-pro' ),
-						'icon' => 'eicon-h-align-center',
+						'icon' => 'eicon-align-center-h',
 					],
 					'end' => [
 						'title' => esc_html__( 'End', 'elementor-pro' ),
-						'icon' => 'eicon-h-align-right',
+						'icon' => "eicon-align-$end-h",
 					],
 					'stretch' => [
 						'title' => esc_html__( 'Stretch', 'elementor-pro' ),
-						'icon' => 'eicon-h-align-stretch',
+						'icon' => 'eicon-align-stretch-h',
 					],
 				],
 				'condition' => [
@@ -533,11 +535,15 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'default' => [ 'px' => 0 ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--tabs-spacing: {{SIZE}}{{UNIT}};',
 				],
@@ -726,8 +732,13 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -906,11 +917,15 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'default' => [ 'px' => 0 ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--forms-columns-gap-padding-right: calc( {{SIZE}}{{UNIT}}/2 ); --forms-columns-gap-padding-left: calc( {{SIZE}}{{UNIT}}/2 ); --forms-columns-gap-margin-left: calc( -{{SIZE}}{{UNIT}}/2 ); --forms-columns-gap-margin-right: calc( -{{SIZE}}{{UNIT}}/2 );',
 				],
@@ -925,11 +940,15 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
-						'max' => 60,
+						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
-				'default' => [ 'px' => 0 ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--forms-rows-gap: {{SIZE}}{{UNIT}};',
 				],
@@ -971,11 +990,15 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
-						'max' => 60,
+						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
-				'default' => [ 'px' => 0 ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--forms-label-spacing: {{SIZE}}{{UNIT}};',
 				],
@@ -1084,14 +1107,15 @@ class My_Account extends Base_Widget {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor-pro' ) . ' (ms)',
 				'type' => Controls_Manager::SLIDER,
-				'selectors' => [
-					'{{WRAPPER}}' => '--forms-fields-focus-transition-duration: {{SIZE}}ms',
-				],
 				'range' => [
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
+				],
+				'selectors' => [
+					'{{WRAPPER}}' => '--forms-fields-focus-transition-duration: {{SIZE}}ms',
 				],
 			]
 		);
@@ -1242,14 +1266,15 @@ class My_Account extends Base_Widget {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor-pro' ) . ' (ms)',
 				'type' => Controls_Manager::SLIDER,
-				'selectors' => [
-					'{{WRAPPER}}' => '--forms-buttons-hover-transition-duration: {{SIZE}}ms',
-				],
 				'range' => [
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
+				],
+				'selectors' => [
+					'{{WRAPPER}}' => '--forms-buttons-hover-transition-duration: {{SIZE}}ms',
 				],
 			]
 		);
@@ -1319,11 +1344,15 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
-						'max' => 60,
+						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
-				'default' => [ 'px' => 0 ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--order-summary-rows-gap-top: calc( {{SIZE}}{{UNIT}}/2 ); --order-summary-rows-gap-bottom: calc( {{SIZE}}{{UNIT}}/2 );',
 				],
@@ -1491,11 +1520,15 @@ class My_Account extends Base_Widget {
 				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'default' => [ 'px' => 0 ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--tables-divider-border-width: {{SIZE}}{{UNIT}};',
 				],
@@ -1624,14 +1657,15 @@ class My_Account extends Base_Widget {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor-pro' ) . ' (ms)',
 				'type' => Controls_Manager::SLIDER,
-				'selectors' => [
-					'{{WRAPPER}}' => '--tables-button-hover-transition-duration: {{SIZE}}ms',
-				],
 				'range' => [
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
+				],
+				'selectors' => [
+					'{{WRAPPER}}' => '--tables-button-hover-transition-duration: {{SIZE}}ms',
 				],
 			]
 		);
@@ -1776,6 +1810,7 @@ class My_Account extends Base_Widget {
 		add_action( 'woocommerce_account_content', [ $this, 'after_account_content' ], 95 );
 		add_filter( 'woocommerce_get_myaccount_page_permalink', [ $this, 'woocommerce_get_myaccount_page_permalink' ], 10, 1 );
 		add_filter( 'woocommerce_logout_default_redirect_url', [ $this, 'woocommerce_logout_default_redirect_url' ], 10, 1 );
+		add_filter( 'woocommerce_is_account_page', '__return_true' );
 
 		if ( $this->has_custom_template() && 'dashboard' === $this->get_current_endpoint() ) {
 			remove_action( 'woocommerce_account_content', 'woocommerce_account_content', 10 );
@@ -1796,6 +1831,7 @@ class My_Account extends Base_Widget {
 		remove_action( 'woocommerce_account_content', [ $this, 'after_account_content' ], 99 );
 		remove_filter( 'woocommerce_get_myaccount_page_permalink', [ $this, 'woocommerce_get_myaccount_page_permalink' ], 10, 1 );
 		remove_filter( 'woocommerce_logout_default_redirect_url', [ $this, 'woocommerce_logout_default_redirect_url' ], 10, 1 );
+		remove_filter( 'woocommerce_is_account_page', '__return_true' );
 
 		if ( $this->has_custom_template() && 'dashboard' === $this->get_current_endpoint() ) {
 			remove_action( 'woocommerce_account_content', [ $this, 'display_custom_template' ], 10 );
@@ -1898,7 +1934,6 @@ class My_Account extends Base_Widget {
 		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<div class="e-my-account-tab e-my-account-tab__' . sanitize_html_class( $current_endpoint ) . ' ' . $custom_dashboard_class . '">'; ?>
-			<span class="elementor-hidden">[[woocommerce_my_account]]</span>
 			<?php echo do_shortcode( '[woocommerce_my_account]' ); ?>
 		</div>
 		<?php
@@ -1926,7 +1961,6 @@ class My_Account extends Base_Widget {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<div class="e-my-account-tab e-my-account-tab__dashboard ' . $custom_dashboard_class . '">';
 		?>
-			<span class="elementor-hidden">[[woocommerce_my_account]]</span>
 			<div class="woocommerce">
 			<?php
 			if ( 'horizontal' === $settings['tabs_layout'] ) {
